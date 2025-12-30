@@ -63,7 +63,7 @@ This course design develops a "Text Keyword Matching Analysis and Index Statisti
 在当今大数据时代，非结构化文本数据呈现爆炸式增长。无论是在Web搜索引擎中检索网页，还是在本地IDE（集成开发环境）中查找代码片段，亦或是生物信息学中DNA序列的比对，字符串匹配（String Matching）都是最底层且最核心的操作之一。
 
 **背景分析：**
-在《数据结构与算法》课程中，串（String）是一种特殊的线性表，其数据元素仅由字符组成。实际应用中，用户经常需要在一个较长的文本串（主串）中查找一个较短的模式串（子串）的位置。最直观的暴力匹配算法（Brute-Force Algorithm）虽然实现简单，但在最坏情况下的效率极低，无法满足大规模文本处理的实时性要求。例如，当主串和模式串均为“aaaa...b”的形式时，暴力算法会进行大量的无效回溯。
+在《数据结构与算法》课程中，串（String）是一种特殊的线性表，其数据元素仅由字符组成。实际应用中，用户经常需要在一个较长的文本串（主串）中查找一个较短的模式串（子串）的位置。最直观的暴力匹配算法（Brute-Force Algorithm）虽然实现简单，但在最坏情况下的效率极低，无法满足大规模文本处理的实时性要求。例如，当主串和模式串均为“aaaa...b”的形式时，暴力算法会进行大量的无效回溯[^1]。
 
 **选题意义：**
 本课题“文本中关键词的匹配分析与索引统计系统”的选择具有重要的理论意义和实用价值。
@@ -125,7 +125,7 @@ This course design develops a "Text Keyword Matching Analysis and Index Statisti
 
 ### 2.1 总体任务目标
 
-本课程设计的总体目标是开发一个基于Java控制台的“文本中关键词匹配分析与索引统计系统”。系统需将理论课上所学的**串（String）**数据结构与**KMP（Knuth-Morris-Pratt）**模式匹配算法应用于实际的文件处理场景中。
+本课程设计的总体目标是开发一个基于Java控制台的“文本中关键词匹配分析与索引统计系统”。系统需将理论课上所学的**串（String）**数据结构与**KMP（Knuth-Morris-Pratt）**模式匹配算法应用于实际的文件处理场景中[^2]。
 
 具体任务目标如下：
 1.  **功能目标**：实现从磁盘读取文本文件，对用户输入的任意关键词进行搜索，准确统计出现次数并定位所有出现的位置索引。
@@ -135,7 +135,7 @@ This course design develops a "Text Keyword Matching Analysis and Index Statisti
 
 ### 2.2 功能模块划分
 
-为了降低系统的耦合度，采用“分治法”将系统划分为以下四个核心模块。各模块职责明确，通过参数传递进行数据交互。
+为了降低系统的耦合度，采用“分治法”将系统划分为以下四个核心模块。各模块职责明确，通过参数传递进行数据交互[^3]。
 
 1.  **文件操作模块 (FileHandler Module)**
     *   **职责**：负责与底层文件系统交互。
@@ -163,14 +163,14 @@ This course design develops a "Text Keyword Matching Analysis and Index Statisti
 本系统采用**MVC（Model-View-Controller）**的简化分层架构思想进行设计：
 
 *   **数据层（Model）**：主要由 Java 的 `String` 类和整型数组 `int[]`（用于存储Next值）构成。数据来源于本地文件系统。
-*   **逻辑层（Controller/Service）**：核心是 KMP 算法。在技术选型上，摒弃了简单的 `BF`（Brute-Force）算法。尽管 BF 算法在一般情况下（字符分布随机）表现尚可，但在极端情况下（如主串 `AAAA...B`，模式串 `AAAB`）会退化为 $O(N \times M)$。而 KMP 算法利用 Next 数组记录已匹配前缀的信息，主串指针 `i` 从不回溯，确保了算法在最坏情况下的线性时间复杂度。
+*   **逻辑层（Controller/Service）**：核心是 KMP 算法。在技术选型上，摒弃了简单的 `BF`（Brute-Force）算法。尽管 BF 算法在一般情况下（字符分布随机）表现尚可，但在极端情况下（如主串 `AAAA...B`，模式串 `AAAB`）会退化为 $O(N \times M)$。而 KMP 算法利用 Next 数组记录已匹配前缀的信息，主串指针 `i` 从不回溯，确保了算法在最坏情况下的线性时间复杂度[^4]。
 *   **表现层（View）**：使用 `System.out` 和 `Scanner` 实现字符界面的交互。
 
 **技术选型依据**：
 *   **开发语言**：Java。利用其强大的 `java.io` 包处理文件流，以及自动内存管理机制。
 *   **数据结构**：
     *   使用 `ArrayList<Integer>` 动态存储匹配到的索引位置，避免因匹配次数未知而难以定义静态数组大小的问题。
-    *   使用 `char[]` 或 `String.charAt()` 访问字符，保证 $O(1)$ 的访问速度。
+    *   使用 `char[]` 或 `String.charAt()` 访问字符，保证 $O(1)$ 的访问速度[^5]。
 
 ## 第 3 章 详细设计
 
@@ -211,11 +211,11 @@ This course design develops a "Text Keyword Matching Analysis and Index Statisti
 
 #### 3.2.1 KMP算法核心原理
 
-KMP算法是由D.E.Knuth、J.H.Morris和V.R.Pratt提出的改进型字符串匹配算法。
+KMP算法是由D.E.Knuth、J.H.Morris和V.R.Pratt提出的改进型字符串匹配算法[^6]。
 
 1.  **核心思想**：
     在暴力匹配中，当主串字符 `S[i]` 与模式串字符 `P[j]` 不匹配时，主串指针 `i` 需要回溯到 `i-j+1`，模式串指针 `j` 回溯到 `0`。
-    KMP算法通过分析模式串本身的结构，发现当匹配失败时，主串指针 `i` **不需要回溯**，只需将模式串向右滑动至“使模式串的前缀与主串当前已匹配部分的后缀重合”的位置。
+    KMP算法通过分析模式串本身的结构，发现当匹配失败时，主串指针 `i` **不需要回溯**，只需将模式串向右滑动至“使模式串的前缀与主串当前已匹配部分的后缀重合”的位置[^7]。
 
 2.  **Next数组的构建原理**：
     *   Next数组存储的是模式串的前缀函数值。
@@ -241,7 +241,7 @@ KMP算法是由D.E.Knuth、J.H.Morris和V.R.Pratt提出的改进型字符串匹�
     *   采用 `try-with-resources` 语法，确保文件流在使用后自动关闭，防止内存泄漏。
     *   异常处理：捕获 `IOException`，若路径非法或无权限，向用户输出友好的错误提示。
 
-2.  **KMP搜索模块**：
+2.  **KMP搜索模块**：[^8]
     *   标准的KMP通常只返回第一个匹配位置。为了满足“统计总次数”和“输出所有索引”的需求，需要对算法进行改造。
     *   当 `j == pattern.length()` 时，说明找到一个匹配。
     *   此时，将 `i - j` 加入结果列表。
@@ -252,7 +252,7 @@ KMP算法是由D.E.Knuth、J.H.Morris和V.R.Pratt提出的改进型字符串匹�
 
 #### 3.2.4 算法复杂度分析
 
-1.  **时间复杂度**：
+1.  **时间复杂度**：[^9]
     *   **Next数组计算**：算法仅遍历一次模式串，复杂度为 $O(M)$，其中 $M$ 为关键词长度。
     *   **匹配过程**：主串指针 $i$ 始终向前移动，不回溯；模式串指针 $j$ 虽然会回溯，但在整个过程中，$i$ 和 $j$ 的移动总次数与主串长度 $N$ 成线性关系。复杂度为 $O(N)$。
     *   **总时间复杂度**：$O(N + M)$。
@@ -267,7 +267,7 @@ KMP算法是由D.E.Knuth、J.H.Morris和V.R.Pratt提出的改进型字符串匹�
 
 ### 4.1 核心代码实现
 
-本系统基于 Java 语言开发，以下截取了系统中最为关键的 **KMP 算法工具类**与**文件操作类**的核心代码片段。代码遵循 Google Java 编程规范，包含详细注释。
+本系统基于 Java 语言开发，以下截取了系统中最为关键的 **KMP 算法工具类**与**文件操作类**的核心代码片段。代码遵循 Google Java 编程规范，包含详细注释[^10]。
 
 **代码片段 1：KMP 算法实现类 (KMPAlgorithm.java)**
 
@@ -516,7 +516,7 @@ public class KMPAlgorithmTest {
 
 #### 4.2.1 测试目的与测试范围
 - **目的**：验证 KMP 算法在不同场景下（正常匹配、多次匹配、无匹配、重叠匹配）的准确性，以及文件 I/O 的稳定性。
-- **测试策略**：采用**单元测试**与**集成测试**相结合的方式。使用 JUnit 5 框架编写自动化测试用例，通过 Maven Surefire 插件执行测试并生成测试报告。
+- **测试策略**：采用**单元测试**与**集成测试**相结合的方式。使用 JUnit 5 框架编写自动化测试用例，通过 Maven Surefire 插件执行测试并生成测试报告。[^8]
 - **范围**：
     1.  **单元测试**：针对 KMP 算法核心方法（`buildNext()`、`search()`）和文件操作方法（`saveToFile()`、`readFromFile()`）进行独立测试。
     2.  **集成测试**：验证控制台交互流程的完整性。
@@ -622,10 +622,16 @@ public class KMPAlgorithmTest {
 
 ## 参考文献
 
-[1] 李小莲,杨泽.数据结构与算法——Java 语言描述[M].清华大学出版社,2024.
-[2] 李春葆等.数据结构教程（Java 语言描述）学习与上机实验指导[M].清华大学出版社,2020.07.
-[3] Cormen T H, Leiserson C E, Rivest R L, et al. Introduction to Algorithms[M]. MIT press, 2022.
-[4] Oracle. Java SE 17 Documentation [EB/OL]. https://docs.oracle.com/en/java/javase/17/, 2025.
+[^1]:李小莲,杨泽.数据结构与算法——Java 语言描述[M].清华大学出版社,2024.
+[^2]:李春葆等.数据结构教程（Java 语言描述）学习与上机实验指导[M].清华大学出版社,2020.07.
+[^3]:Cormen T H, Leiserson C E, Rivest R L, et al. Introduction to Algorithms[M]. MIT press, 2022.
+[^4]:Oracle. Java SE 17 Documentation [EB/OL]. https://docs.oracle.com/en/java/javase/17/, 2025.
+[^5]:陈天一，郑闻悦，邹健，等.基于KMP算法的字符串查找匹配研究[J].科技创新导报，2019,16（23）：242-243.DOI：10.16660/j.cnki.1674-098X.2019.23.242.
+[^6]:张宇乐，魏佳.基于数学视角的KMP字符串匹配算法原理分析与研究[J].电脑知识与技术，2025,21（31）：57-60.DOI：10.14004/j.cnki.ckt.2025.1578.
+[^7]:Paulson L C. Fast String Search by Knuth–Morris–Pratt[M]//Functional Data Structures and Algorithms: A Proof Assistant Approach. 2025: 299-312.
+[^8]:孙娟红.一种基于KMP算法思想的字符串匹配算法的研究与实现[J].电脑知识与技术，2019,15（26）：196-197.DOI：10.14004/j.cnki.ckt.20191024.001.
+[^9]:张宇乐，魏佳.基于数学视角的KMP字符串匹配算法原理分析与研究[J].电脑知识与技术，2025,21（31）：57-60.DOI：10.14004/j.cnki.ckt.2025.1578.
+[^10]:Paulson L C. Fast String Search by Knuth–Morris–Pratt[M]//Functional Data Structures and Algorithms: A Proof Assistant Approach. 2025: 299-312.
 
 ---
 
